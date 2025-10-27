@@ -1,0 +1,212 @@
+<!-- templates/index.html -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Web Vulnerability Scanner</title>
+
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <style>
+      /* Basic reset and font setup */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", Arial, sans-serif;
+        background-color: #f9fafb;
+        color: #222;
+        padding: 40px;
+        line-height: 1.6;
+      }
+
+      h2 {
+        text-align: center;
+        font-size: 2rem;
+        color: #1d3557;
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      h2::after {
+        content: "";
+        display: block;
+        width: 80px;
+        height: 4px;
+        background: #457b9d;
+        margin: 10px auto 0;
+        border-radius: 2px;
+      }
+
+      form {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+      }
+
+      input[type="text"] {
+        width: 400px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid #ccd0d5;
+        background-color: #fff;
+        font-size: 15px;
+        transition: 0.3s ease;
+      }
+
+      input[type="text"]:focus {
+        border-color: #457b9d;
+        box-shadow: 0 0 6px rgba(69, 123, 157, 0.3);
+        outline: none;
+      }
+
+      button {
+        background-color: #457b9d;
+        color: #fff;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        background-color: #1d3557;
+        transform: translateY(-2px);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      h3 {
+        color: #1d3557;
+        margin-top: 20px;
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+        text-align: center;
+      }
+
+      .result {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 18px;
+        margin: 15px auto;
+        width: 90%;
+        max-width: 700px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: 0.3s;
+      }
+
+      .result:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+      }
+
+      .vuln {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #e63946;
+        margin-bottom: 5px;
+      }
+
+      .info-line {
+        margin: 6px 0;
+      }
+
+      code {
+        background: #f0f4f8;
+        padding: 3px 6px;
+        border-radius: 4px;
+        color: #1d3557;
+        font-size: 0.9rem;
+      }
+
+      pre {
+        background: #f8f9fa;
+        border-left: 4px solid #457b9d;
+        padding: 10px;
+        border-radius: 6px;
+        overflow-x: auto;
+      }
+
+      .icon {
+        color: #457b9d;
+        margin-right: 6px;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 0.9rem;
+        color: #666;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2><i class="fa-solid fa-shield-halved icon"></i>Web Vulnerability Scanner</h2>
+
+    <form method="post">
+      <input
+        type="text"
+        name="url"
+        placeholder="Enter target URL (e.g. testphp.vulnweb.com)"
+        value="{{ target }}"
+      />
+      <button type="submit">
+        <i class="fa-solid fa-bug icon"></i> Start Scan
+      </button>
+    </form>
+
+    <h3><i class="fa-solid fa-list-check icon"></i>Scan Results</h3>
+
+    {% if results %}
+      {% for r in results %}
+        <div class="result">
+          <div class="vuln">
+            <i class="fa-solid fa-triangle-exclamation icon"></i>{{ r.vuln }}
+          </div>
+          <div class="info-line">
+            <i class="fa-solid fa-link icon"></i><strong>URL:</strong> {{ r.url }}
+          </div>
+          {% if r.payload %}
+            <div class="info-line">
+              <i class="fa-solid fa-code icon"></i><strong>Payload:</strong>
+              <code>{{ r.payload }}</code>
+            </div>
+          {% endif %}
+          {% if r.evidence %}
+            <div class="info-line">
+              <i class="fa-solid fa-magnifying-glass icon"></i><strong>Evidence:</strong>
+              {{ r.evidence }}
+            </div>
+          {% endif %}
+          {% if r.evidence_snippet %}
+            <div class="info-line">
+              <i class="fa-solid fa-file-code icon"></i><strong>Snippet:</strong>
+              <pre style="white-space: pre-wrap;">{{ r.evidence_snippet }}</pre>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <p style="text-align:center; color:#555;">
+        <i class="fa-solid fa-info-circle icon"></i>No results yet. Enter a URL and click
+        <strong>Start Scan</strong>.
+      </p>
+    {% endif %}
+
+    <footer>
+      <p>🔒 Powered by Flask | Designed for Security Researchers</p>
+    </footer>
+  </body>
+</html>
